@@ -2,7 +2,7 @@
 
 namespace umnayarabota\models;
 
-class ProductAttributeValue
+class ProductAttributeValue extends BaseModel
 {
     /**
      * @var Attribute
@@ -15,11 +15,15 @@ class ProductAttributeValue
     public $value;
 
     /**
+     * ProductAttributeValue constructor.
      * @param Attribute $attribute
      * @param AttributeValue $value
+     * @param array $config
      */
-    public function __construct(Attribute $attribute, AttributeValue $value)
+    public function __construct(Attribute $attribute, AttributeValue $value, array $config = [])
     {
+        parent::__construct($config);
+
         $this->attribute = $attribute;
         $this->value = $value;
     }

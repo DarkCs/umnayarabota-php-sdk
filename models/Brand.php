@@ -2,7 +2,7 @@
 
 namespace umnayarabota\models;
 
-class Brand
+class Brand extends BaseModel
 {
     /**
      * @var int
@@ -18,16 +18,4 @@ class Brand
      * @var string
      */
     public $name;
-
-    /**
-     * @param int $id
-     * @param string $external_id
-     * @param string $name
-     */
-    public function __construct($id = null, $external_id, $name)
-    {
-        $this->id = $id;
-        $this->external_id = $external_id;
-        $this->name = $name;
-    }
 }

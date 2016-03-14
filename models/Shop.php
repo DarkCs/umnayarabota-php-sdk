@@ -2,7 +2,7 @@
 
 namespace umnayarabota\models;
 
-class Shop
+class Shop extends BaseModel
 {
     /**
      * @var int
@@ -18,16 +18,4 @@ class Shop
      * @var string
      */
     public $url;
-
-    /**
-     * @param $id
-     * @param $name
-     * @param $url
-     */
-    public function __construct($id = null, $name, $url = null)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->url = $url;
-    }
 }

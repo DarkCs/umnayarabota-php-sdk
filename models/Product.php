@@ -2,7 +2,7 @@
 
 namespace umnayarabota\models;
 
-class Product
+class Product extends BaseModel
 {
     public $id;
     public $category_id;
@@ -36,11 +36,4 @@ class Product
      * @var ProductAttributeValue[]
      */
     public $eav = [];
-
-    public function __construct($config = [])
-    {
-        foreach ($config as $attribute => $value) {
-            $this->$attribute = $value;
-        }
-    }
 }

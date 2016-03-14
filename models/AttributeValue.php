@@ -2,7 +2,7 @@
 
 namespace umnayarabota\models;
 
-class AttributeValue
+class AttributeValue extends BaseModel
 {
     /**
      * @var int
@@ -23,18 +23,4 @@ class AttributeValue
      * @var string
      */
     public $value;
-
-    /**
-     * @param int $id
-     * @param int $attribute_id
-     * @param string $external_id
-     * @param string $value
-     */
-    public function __construct($id = null, $attribute_id, $external_id, $value)
-    {
-        $this->id = $id;
-        $this->attribute_id = $attribute_id;
-        $this->external_id = $external_id;
-        $this->value = $value;
-    }
 }

@@ -10,6 +10,7 @@ use umnayarabota\models\AttributeValue;
 use umnayarabota\models\Brand;
 use umnayarabota\models\Category;
 use umnayarabota\models\Product;
+use umnayarabota\models\ProductAttributeValue;
 use umnayarabota\models\Shop;
 use umnayarabota\models\WorkProduct;
 
@@ -61,9 +62,9 @@ class Client
         return $this->httpClient;
     }
 
-    public function getApiUrl($route, Shop $shop = null)
+    public function getApiUrl($route, Shop $shop = null, $params = [])
     {
-        return sprintf('%s/%s?access-token=%s&shop_id=%s', $this->apiUrl, $route, $this->apiAccessToken, $shop ? $shop->id : '');
+        return sprintf('%s/%s?access-token=%s&shop_id=%s&%s', $this->apiUrl, $route, $this->apiAccessToken, ($shop ? $shop->id : ''), http_build_query($params));
     }
 
     public function getResponseValue(ResponseInterface $response, $attribute = null)
@@ -477,5 +478,70 @@ class Client
         }
 
         return false;
+    }
+
+    public function getWorkProduct(Shop $shop, $work_product_id)
+    {
+        try {
+            $response = $this->getHttpClient()->get($this->getApiUrl('work/products/' . $work_product_id, $shop, ['expand' => 'brand,category,eav']));
+
+            $data = $this->getResponseValue($response);
+
+
+            if ($brandData = $data['brand']) {
+                $data['brand'] = new Brand([
+                    'id' => $brandData['id'],
+                    'external_id' => $brandData['external_id'],
+                    'name' => $brandData['name'],
+                ]);
+            }
+
+            if ($categoryData = $data['category']) {
+                $data['category'] = new Brand([
+                    'id' => $categoryData['id'],
+                    'parent_id' => $categoryData['parent_id'],
+                    'name' => $categoryData['name'],
+                    'external_id' => $categoryData['external_id'],
+                ]);
+            }
+
+            $eavData = ArrayHelper::getValue($data, 'eav');
+
+            $eav = [];
+
+            foreach ($eavData as $item) {
+                $attributeData = $item['attribute'];
+                $valueData = $item['value'];
+
+                $eav[] = new ProductAttributeValue(
+                    new Attribute([
+                        'id' => $attributeData['id'],
+                        'external_id' => $attributeData['external_id'],
+                        'name' => $attributeData['name'],
+                        'unit' => $attributeData['unit'],
+                    ]),
+                    new AttributeValue([
+                        'id' => $valueData['id'],
+                        'external_id' => $valueData['external_id'],
+                        'attribute_id' => $valueData['attribute_id'],
+                        'value' => $valueData['value'],
+                    ])
+                );
+            }
+
+            $data['eav'] = $eav;
+
+            $product = new WorkProduct(
+                new Product([
+                    'id' => $data['product_id'],
+                ]),
+                $data
+            );
+
+            return $product;
+
+        } catch (ClientException $e) {
+            throw new \Exception($e->getResponse()->getBody());
+        }
     }
 }
