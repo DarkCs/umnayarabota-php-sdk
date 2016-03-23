@@ -41,6 +41,11 @@ class WorkProduct extends BaseModel
     public $links = [];
 
     /**
+     * @var ProductImage[]
+     */
+    public $images = [];
+
+    /**
      * @var ProductAttributeValue[]
      */
     public $eav = [];

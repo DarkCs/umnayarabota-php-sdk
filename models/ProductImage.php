@@ -28,4 +28,9 @@ class ProductImage extends BaseModel
      * @var string
      */
     public $title;
+
+    /**
+     * @var int
+     */
+    public $position;
 }

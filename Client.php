@@ -11,6 +11,7 @@ use umnayarabota\models\Brand;
 use umnayarabota\models\Category;
 use umnayarabota\models\Product;
 use umnayarabota\models\ProductAttributeValue;
+use umnayarabota\models\ProductImage;
 use umnayarabota\models\Shop;
 use umnayarabota\models\WorkProduct;
 
@@ -483,7 +484,7 @@ class Client
     public function getWorkProduct(Shop $shop, $work_product_id)
     {
         try {
-            $response = $this->getHttpClient()->get($this->getApiUrl('work/products/' . $work_product_id, $shop, ['expand' => 'brand,category,eav']));
+            $response = $this->getHttpClient()->get($this->getApiUrl('work/products/' . $work_product_id, $shop, ['expand' => 'brand,category,eav,images']));
 
             $data = $this->getResponseValue($response);
 
@@ -530,6 +531,22 @@ class Client
             }
 
             $data['eav'] = $eav;
+
+            $images = [];
+            $imagesData = ArrayHelper::getValue($data, 'images');
+
+            foreach ($imagesData as $item) {
+                $images[] = new ProductImage([
+                    'id' => $item['id'],
+                    'external_id' => $item['external_id'],
+                    'product_id' => $item['product_id'],
+                    'url' => $item['url'],
+                    'title' => $item['title'],
+                    'position' => $item['position'],
+                ]);
+            }
+
+            $data['images'] = $images;
 
             $product = new WorkProduct(
                 new Product([
