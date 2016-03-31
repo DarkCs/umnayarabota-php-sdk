@@ -420,7 +420,7 @@ class Client
         }
 
         try {
-            $response = $this->getHttpClient()->put($this->getApiUrl('shop/attributes/' . ($value->id ?: 'external/' . $value->external_id), $shop), [
+            $response = $this->getHttpClient()->put($this->getApiUrl('shop/attribute-values/' . ($value->id ?: 'external/' . $value->external_id), $shop), [
                 'json' => [
                     'value' => $value->value,
                     'attribute_id' => $value->attribute_id,
