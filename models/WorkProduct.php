@@ -38,7 +38,7 @@ class WorkProduct extends BaseModel
     public $is_ready;
     public $status;
 
-    public $links = [];
+    public $options = [];
 
     /**
      * @var ProductImage[]
